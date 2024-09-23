@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	
+<!-- 	Oracle 데이터베이스 사용. -->
+	<bean class="kr.or.ddit.lab01.objs.dao.OracleDAOImpl" id="dummyDAO" />
+	
+	<bean class="kr.or.ddit.lab01.objs.service.DummyServiceImpl" id="dummyService" 
+		c:dao-ref="dummyDAO"
+	/>
+	
+	<bean class="kr.or.ddit.lab01.objs.controller.DummyController" id="dummyController" 
+		p:service-ref="dummyService"
+		p:viewSub-ref="dummyHtmlView"
+	/>
+	
+	<bean class="kr.or.ddit.lab01.objs.view.DummyHtmlView" id="dummyHtmlView"/>
+	
+</beans>

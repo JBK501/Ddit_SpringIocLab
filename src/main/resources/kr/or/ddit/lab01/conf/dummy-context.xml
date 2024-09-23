@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+
+	<!-- 
+		스프링 컨테이너를 사용하는 이유
+		어플리케이션 간의 결합력을 낮추기 위해서 사용한다.
+	 -->
+	 
+	<!-- [bean] 
+		 스프링 컨테이너를 관리하는 객체
+		 의존관계 주입방법
+		  - 생성자
+		  - setter
+	-->
+	
+	<!-- [COC] (Convention Over Configuration)
+		 1. id 값 확인해보면 된다.
+		 2. 구체적인 식별성을 설정하지 않으면, 자동으로 추천해준다. 
+	 -->
+	 
+	 <!-- 
+	 	class = "" | 해당객체를 참조한다.
+	 	id = "" | 해당 이름으로 참조한다.
+	 	ref = "" | 식별자 기준으로 참조한 정보를 가져온다.
+	 	property = "" | 자바빈 규약에 따라 객체를 주입한다. 
+	  -->
+	  
+	  <!-- DAO BEAN -->
+	<bean class="kr.or.ddit.lab01.objs.dao.MariaDBDAOImpl" id="dummyDAO"></bean>
+	
+	<!-- SERVICE BEAN -->
+	<bean class="kr.or.ddit.lab01.objs.service.DummyServiceImpl" id="dummyService"> 
+		<!-- 
+			 생성자를 통한 객체 주입방식을 적용한다. 
+			 DummyServiceImpl의 생성자 참고해서 name을 추천해준다.
+		-->
+		<constructor-arg name="dao" ref="dummyDAO"></constructor-arg>	
+	</bean>
+	
+	<!-- CONTROLLER BEAN -->
+	<bean class="kr.or.ddit.lab01.objs.controller.DummyController" id="dummyController">
+		<property name="service" ref="dummyService"></property>
+		<property name="viewSub">
+			<!-- VIEW BEAN 을 안에다가 등록했다.
+				 CONTROLLER BEAN 안에서만 사용한다는 의미다.
+				 DummyHtmlView는 굳이 컨테이너에 등록해서 사용할 필요가 없는 객체다.
+				 DummyHtmlView는 따로 의존하는 코드가 없기 때문이다.
+			-->
+			<bean class="kr.or.ddit.lab01.objs.view.DummyHtmlView" />
+		</property>
+	</bean>
+	
+</beans>	

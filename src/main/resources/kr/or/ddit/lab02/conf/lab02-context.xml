@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<!-- 
+		[스프링 컨테이너(bean container, di container, ioc container) 사용단계]
+		1. spring-context 의존성 추가한다.(pom.xml)
+		2. spring bean configuration file 정의한다.
+		3. 스프링 컨테이너에 빈(객체)을 등록한다.
+		4. 등록된 빈들간의 관계를 형성한다. 
+			- 생성자 주입 
+				필수적으로 꼭 있어야하는 관계에 사용한다.
+			- setter 주입
+				주입을 해줘도 그만 안해줘도 그만인 관계에 사용한다.
+		5. 어플리케이션의 엔트리 포인트에서 컨테이너 객체를 생성한다.
+		6. 컨테이너로부터 필요 객체(빈)을 주입받아 사용한다.
+	 -->	
+	 
+	 <!-- 
+	 	[스프링 컨테이너의 빈 관리 특성]
+	 	1. 특별한 설정(scope)이 없는 한, 빈은 싱클턴으로 관리한다.
+	 	   -> VO와 같은 객체는 싱글턴이어서는 안 된다.
+	 	   -> 이때 scope를 지정한다.
+	 	2. 특별한 설정이 없는 한 등록된 모든 빈의 객체를 컨테이너가 초기화될때 일시에 생성한다.
+	 	   = 스프링은 안에 들어있는 객체를, 컨테이너가 초기화될 때 생성한다.
+	 	   lazy-init="true"|"false" - 빈 객체의 생성 시점을 지연시킬 수 있다.
+	 	3. 컨테이너는 POJO 형태의 빈이라도, 생명주기 callback 을 호출할 수 있다.
+	 	   init-method / destroy-method 속성으로 콜백을 지정한다. 
+	  -->
+	 
+	 
+	 <!-- 
+	 	[문법]
+	 	◎ c: 생성자 (constructor-arg)
+	 	◎ p : 프로터티 (property-arg)
+	 	◎ ref : 참조형 객체를 받아온다.
+	 	◎ scope="singleton" : 하나의 빈이 하나의 객체를 관리한다.
+	 	◎ scope="prototype" : 매번 주입시마다 다른 객체를 생성하고 주입한다.
+	 						싱글턴 객체에서 제외한다.
+	 						lazy가 이미 포함되어 있다. (lazy-init="true")
+	 	◎ lazy-init="true" :  해당 객체를 사용할 때, 객체를 생성한다.
+	 						= 필요없는 객체를 미리 만들지 않는다.
+	 	
+	 	라이프사이클 콜백
+	 	◎ init-method="initas"
+	 	◎ destroy-method="destroyas"
+	 	=> 의존관계 주입이 끝난후에 호출한다.
+	 -->
+	 <bean class="kr.or.ddit.lab02.objs.Bar" id="bar" 
+	 />
+	 <bean class="kr.or.ddit.lab02.objs.Baz" id="baz" 
+	 />
+	 <bean class="kr.or.ddit.lab02.objs.Foo" id="foo" 
+	 	c:baz-ref="baz"
+	 	c:number="23"
+	 	p:bar-ref="bar"
+	 	p:flag="true"
+	 	init-method="initas"
+	 	destroy-method="destroyas"
+	 	scope="prototype"
+	 />
+	 	
+
+</beans>

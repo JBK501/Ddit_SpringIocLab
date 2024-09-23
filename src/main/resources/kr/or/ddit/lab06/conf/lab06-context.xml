@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.3.xsd">
+
+	<!-- 
+		#{} : Spring에서 사용하는 EL문법
+	 -->
+	 <!-- 
+	 	[연산자] 
+		+ : 문자를 붙여넣는다.
+		* : 이전 문자를 숫자만큼 붙어넣는다.
+	 -->
+	<!-- +3 : 33  3을 붙여넣음-->
+	<!-- *3 : 222 똑같은 숫자 3개 붙여넣음 -->
+	 
+	
+	<!-- 1. util: -->
+	<!-- 해당 경로에 존재하는 프로퍼티를 하나의 객체로 모은다. -->
+	<util:properties id="dbInfo" location="classpath:kr/or/ddit/db/DbInfo.properties" />
+	
+	<bean class="kr.or.ddit.lab06.objs.DbInfoVO" id="vo1" 
+		  p:driverClassName="#{dbInfo['maindb.driverClassName']}"
+		  p:url="#{dbInfo['maindb.url']}"
+		  p:user="#{dbInfo['maindb.user']}"
+		  p:password="#{dbInfo['maindb.password']}"
+		  p:autoCommit="#{dbInfo['autoCommit']}"
+		  p:connectionTimeout="#{dbInfo['connectionTimeout']}"
+		  p:connectionTestQuery="#{dbInfo['connectionTestQuery'] * 2}"
+		  p:maximumPoolSize="#{dbInfo['maximumPoolSize'] + 3}" 
+		  p:minimumIdle="#{dbInfo['minimumIdle'] * 3}"
+	></bean>
+	
+	
+	<!-- 2. context: -->
+	<!-- 빈 등록이 아님. / 해당 경로에 존재하는 프로퍼티를 메모리에 부어버린다. -->
+	<context:property-placeholder location="classpath:kr/or/ddit/db/DbInfo.properties" />
+	
+	<bean class="kr.or.ddit.lab06.objs.DbInfoVO" id="vo2" 
+		  p:driverClassName="${maindb.driverClassName}"
+		  p:url="${maindb.url}"
+		  p:user="${maindb.user}"
+		  init-method="init"
+	/>
+	
+</beans>

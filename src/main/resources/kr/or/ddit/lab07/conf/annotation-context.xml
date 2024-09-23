@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+
+	<!-- 
+		[어노테이션 기반 스프링 컨테이너 설정]
+		1. context:annotation-config
+			자주 활용되는 어노테이션들이 동작할 수 있도록, PostProcessor 를 빈으로 등록해준다.
+		
+		@Reruired 
+			1) Settor injection 시에 필수 프로퍼티 주입을 표현한다.
+			2) = 필수적으로 셋터가 실행되어야 함.
+			3) 현재는 사용 X
+		
+		@Autowired
+			1) 어노테이션 기반 주입에 사용한다.
+		
+		@PostConstruct
+			1) 모든 주입이 끝난 이후 동작할 생명주기 콜백을 지정한다. 
+			2) init() 생각할 것.
+			
+		@PreDestroy
+		
+		@Primary 
+			1) 동일 조건의 빈 중 우선 주입대상을 설정한다.
+			ex) 마리아 디비 임플과 오라클 디비 임플중 우선순위를 결정함.
+		@Resource
+			1) 주입 대상의 검색조건 다양화 가능
+			@Resource(name = "OracleDAO")
+		
+		2. context:annotation-config
+			1) 특정 패키지 아래 클래스들 중, 일정 조건을 만족하는 클래스를 빈으로 등록해준다.
+			2) 종류 
+				@Component 
+				@Controller : Controller Layer
+				@Service : Business Logic Layer 에 사용하도록 팁을 줌.
+				@Repository : Persistence Layer 
+				@RestController : json 객체를 주고받는다는 팁
+				@Configuration : java-config 방식에서 사용하라는 팁
+			   - 컨테이너 입장에서는 다 똑같은 어노테이션이다.
+			   - 개발자에게 의도를 전달하는 용도로 사용한다. 
+	 -->
+	
+	<!-- 
+		[주석]
+		- 개발자에게 의도를 전달하는 주석
+		- 시스템(컴파일러, 톰캣)에게 정보를 전달하는 주석
+	 -->
+		
+
+	<context:component-scan base-package="kr.or.ddit.lab07.objs" annotation-config="true" 
+						    use-default-filters="true">
+<!-- 			<context:exclude-filter type="annotation"  -->
+<!-- 				expression="org.springframework.stereotype.Controller"/> -->
+	</context:component-scan>
+	
+	<bean class="java.lang.String" id="optionalProp"
+		c:original="value"
+	/>
+	
+</beans>

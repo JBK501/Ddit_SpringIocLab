@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.3.xsd">
+
+	<!-- [scope]
+		session : 세션의 생명주기에 사용
+		ex) 회원의 인증정보만 관리하는 객체를 사용할 때
+	 -->
+	<bean class="kr.or.ddit.lab03.objs.HuntingDog" id="huntingDog"/>
+	<bean class="kr.or.ddit.lab03.objs.ShotGun" id="shotGun" 
+		  scope="prototype" />
+	<bean class="kr.or.ddit.lab03.objs.Hunter" 
+				  c:shotGun-ref="shotGun"
+				  p:huntingDog-ref="huntingDog"
+				  scope="prototype"
+				  init-method="init"
+				  id="hunter"
+	/>
+
+	<!-- 
+		[util:list] 
+		리스트 컬렉션을 빈에 등록하기위해 사용한다.
+		list-class : 구현체 종류를 결정한다.
+		value-type : Generic 타입을 지정한다.
+	 -->
+	 <util:list id="dummyList" />
+	 
+	<util:list id="hunterList" list-class="java.util.LinkedList" 
+			   value-type="kr.or.ddit.lab03.objs.Hunter">
+			<ref bean="hunter"/>
+			<ref bean="hunter"/>
+			<ref bean="hunter"/>
+	</util:list>	
+	
+	<!-- [util:set]  -->
+	<util:set id="dogSet" set-class="java.util.LinkedHashSet"
+			  value-type="kr.or.ddit.lab03.objs.HuntingDog">
+			<ref bean="huntingDog"/>
+			<ref bean="huntingDog"/>
+			<ref bean="huntingDog"/>
+	</util:set>
+	
+	<!-- [util:map]  -->
+	<util:map id="gunMap" key-type="java.lang.String" 
+			  value-type="kr.or.ddit.lab03.objs.ShotGun">
+		<entry key="hunter1" value-ref="shotGun" />
+		<entry key="hunter2" value-ref="shotGun" />
+		<entry key="hunter3" value-ref="shotGun" />
+	</util:map>
+	
+	<!-- [properties]
+		key-type 은 String으로 고정되어 있다.
+		properties는 제너릭이 없다.
+		따라서 key  값과 value 값은 String 으로 지정한다.
+	 -->
+	<util:properties id="dbInfo" location="classpath:kr/or/ddit/db/DbInfo.properties">
+			<prop key="newProp">propValue</prop>
+	</util:properties>
+	
+	<!-- huntingGameComposite -->
+	<bean class="kr.or.ddit.lab05.objs.HuntingGameComposite" id="huntingGameComposite"
+		c:hunterList-ref="hunterList"
+		c:dogSet-ref="dogSet"
+		c:gunMap-ref="gunMap"
+		p:stringArray-ref="stringArray"
+		p:dbInfo-ref="dbInfo"
+	/>
+	
+	<!-- array -->
+	<bean class="kr.or.ddit.lab05.objs.StringArrayFactoryBean" id="stringArray" />	
+</beans>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace = DAO 의 인터페이스 퀄러파이트 네임 사용 -->
+<mapper namespace="kr.or.ddit.jdbcboard.dao.JdbcBoardDAO"> 
+	<insert id="insertJdbcBoard" parameterType="jdbcBoardVO" >
+		INSERT INTO JDBC_BOARD(
+			BOARD_NO
+			,BOARD_TITLE
+			,BOARD_WRITER
+			,BOARD_DATE
+			,BOARD_CONTENT
+		)VALUES(
+			BOARD_SEQ.NEXTVAL
+			,#{boardTitle,jdbcType=VARCHAR}
+			,#{boardWriter, jdbcType=VARCHAR}
+			,sysdate
+			,#{boardContent,jdbcType=CLOB}
+			<!-- 인라인 속성값 사용 -->
+			<!-- jdbcType : 들어온값이 null이면, 원하는 형태의 데이터로 null 값을 넣어준다. -->
+			<!-- jdbcType : VARCHAR | db에서 VARCHAR에 해당하는 null 형태로 값을 지정한다. -->
+		)  
+	</insert>
+	<select id="selectJdbcBoardList" resultType="JdbcBoardVO"> 
+		SELECT BOARD_NO, BOARD_TITLE, BOARD_WRITER,
+			   TO_CHAR(BOARD_DATE, 'YYYY-MM-DD HH24:MI:SS') BOARD_DATE 
+		FROM JDBC_BOARD 
+		ORDER BY BOARD_NO DESC 
+	</select>
+	<select id="selectJdbcBoard" parameterType="int" resultType="JdbcBoardVO">
+		SELECT BOARD_NO, BOARD_TITLE, BOARD_WRITER,
+			   TO_CHAR(BOARD_DATE, 'YYYY-MM-DD HH24:MI:SS') BOARD_DATE,
+			   BOARD_CONTENT
+		FROM JDBC_BOARD
+		<!-- inline parameter -->
+		WHERE BOARD_NO = #{no,jdbcType=NUMERIC}
+	</select>
+	<update id="updateJdbcBoard" parameterType="JdbcBoardVO">
+		UPDATE JDBC_BOARD
+		SET BOARD_CONTENT = #{boardContent}
+		WHERE BOARD_NO = #{boardNo}
+	</update>
+	<delete id="deleteJdbcBoard" parameterType="int">
+		DELETE FROM JDBC_BOARD
+		WHERE BOARD_NO = #{boardNo}		
+	</delete>
+</mapper>
